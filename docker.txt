@@ -1,0 +1,159 @@
+if we got to cmd and serach ipconfig : then we get op :
+
+
+Windows IP Configuration
+
+
+Ethernet adapter Ethernet:
+
+   Media State . . . . . . . . . . . : Media disconnected
+   Connection-specific DNS Suffix  . : 
+
+Wireless LAN adapter Local Area Connection* 3:
+
+   Media State . . . . . . . . . . . : Media disconnected
+   Connection-specific DNS Suffix  . :
+
+Wireless LAN adapter Local Area Connection* 4:
+
+   Media State . . . . . . . . . . . : Media disconnected
+   Connection-specific DNS Suffix  . :
+
+Wireless LAN adapter Wi-Fi:
+
+   Connection-specific DNS Suffix  . :
+   Link-local IPv6 Address . . . . . : fe80::72c2:460f:6321:6061%17
+   IPv4 Address. . . . . . . . . . . : 192.168.1.6   # <<-- these is ur local address   
+   Subnet Mask . . . . . . . . . . . : 255.255.255.0
+   Default Gateway . . . . . . . . . : 192.168.1.1
+
+Ethernet adapter vEthernet (WSL (Hyper-V firewall)):
+
+   Connection-specific DNS Suffix  . :
+   Link-local IPv6 Address . . . . . : fe80::c478:dd83:44a6:b54c%46
+   IPv4 Address. . . . . . . . . . . : 172.29.144.1
+   Subnet Mask . . . . . . . . . . . : 255.255.240.0
+   Default Gateway . . . . . . . . . :
+
+
+
+here you are also able to access local address and also you can able to acees ost address   
+
+
+
+# so we run the code , with ip adress =  IPv4 Address. . . . . . . . . . . : 192.168.1.6  
+
+
+
+# to create docker image we have to create a docker file 
+
+1) in docker file we will use use some of docker commmand   
+
+
+docker file = 
+
+FROM python:3.8-alpine 
+COPY . /app
+WORKDIR /app
+RUN  pip install -r requirements.txt 
+CMD python app.py  
+
+
+# in cmd 
+
+** docker command 
+
+1) docker build -t welcome-app    <--- to build entire docker image (here every commnad from docker file will run here ) 
+
+
+2)  if you want to see where you docker has build or not 
+
+docker images  < -- commnad 
+
+op:
+(base) E:\Docker>docker images
+REPOSITORY    TAG       IMAGE ID       CREATED         SIZE
+welcome-app   latest    c6528bd56fe7   6 minutes ago   61MB
+
+
+3) Run the specific docker images as conatainer 
+ two information you have to give 
+    1 .your host port and 
+    2. you container port  
+
+
+################################################################################# 
+
+now next whatever images we have created we push it to docker repository 
+
+1) docker login :
+
+docker login 
+Authenticating with existing credentials...
+Login Succeeded  
+
+2) docker images :
+
+(base) E:\Docker>docker images
+REPOSITORY    TAG       IMAGE ID       CREATED          SIZE
+welcome-app   latest    c6528bd56fe7   28 minutes ago   61MB  
+
+
+3) if we wanr to rename docker image : 
+
+# 1st remove it : 
+>docker image rm -f welcome-app   
+
+# build image new : 
+
+docker build -t jayraj2498/first_app .   
+
+# another way to build and to change of the image name . 
+
+REPOSITORY             TAG       IMAGE ID       CREATED          SIZE
+second_app             latest    0d187dc0b516   15 seconds ago   61MB
+jayraj2498/first_app   latest    b8840543dc52   5 minutes ago    61MB
+
+command:-->  (base) E:\Docker>docker tag second_app final_app   
+
+op: 
+REPOSITORY             TAG       IMAGE ID       CREATED              SIZE
+final_app              latest    0d187dc0b516   About a minute ago   61MB
+second_app             latest    0d187dc0b516   About a minute ago   61MB
+jayraj2498/first_app   latest    b8840543dc52   7 minutes ago        61M
+
+
+
+4) push the image 
+
+command : 
+E:\Docker>docker push jayraj2498/first_app:latest    < -- you can downloa it and run as container   
+
+
+# pull 
+
+(base) E:\Docker>docker images 
+REPOSITORY             TAG       IMAGE ID       CREATED          SIZE
+jayraj2498/first_app   latest    b8840543dc52   44 minutes ago   61MB    
+
+# pull : 
+
+E:\Docker>docker pull jayraj2498/last_app:latest 
+
+op: latest: Pulling from jayraj2498/first_app 
+
+
+
+# run : 
+
+
+(base) E:\Docker>docker run -d -p 5000:5000 jayraj2498/first_app 
+56950231c347cfaba874bbe874d7bdb181ed16e40cd92857f9e9af7fc3508022  
+
+
+
+(base) E:\Docker>docker images 
+REPOSITORY               TAG       IMAGE ID       CREATED         SIZE
+jayraj2498/first_app     latest    b8840543dc52   3 hours ago     61MB
+hello-world              latest    d2c94e258dcb   8 months ago    13.3kB
+docker/getting-started   latest    3e4394f6b72f   12 months ago   47MB
