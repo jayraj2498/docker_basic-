@@ -1,18 +1,30 @@
-# Your Project Name
+# Docker Basics Project
 
-Brief description or introduction of your project.
+This project serves as a beginner's guide to Docker, covering essential commands for building, pushing, pulling, and managing Docker images.
 
-## Prerequisites
 
-- List any software, tools, or dependencies that need to be installed before using your project.
+docker file = 
+
+FROM python:3.8-alpine 
+COPY . /app
+WORKDIR /app
+RUN  pip install -r requirements.txt 
+CMD python app.py  
+
+- [Docker](https://www.docker.com/) installed on your machine.
 
 ## Getting Started
 
-### Installation
+### Building a Docker Image
 
-Provide instructions on how to install your project.
+docker build -t yourusername/yourproject:latest .
 
-```bash
-git clone 
-cd yourproject
+
+docker login
+docker push yourusername/yourproject:latest
+
+
+docker pull yourusername/yourproject:latest
+
+
 
