@@ -63,7 +63,7 @@ CMD python app.py
 
 ** docker command 
 
-1) docker build -t welcome-app    <--- to build entire docker image (here every commnad from docker file will run here ) 
+1) docker build -t welcome-app .   <--- to build entire docker image (here every commnad from docker file will run here ) (. is)
 
 
 2)  if you want to see where you docker has build or not 
@@ -77,18 +77,58 @@ welcome-app   latest    c6528bd56fe7   6 minutes ago   61MB
 
 
 3) Run the specific docker images as conatainer 
+
  two information you have to give 
     1 .your host port and 
     2. you container port  
 
 
+run : 
+
+docker run -p 5000:5000 welcome-app              host : container docker image name 
+
+++++++++++++++++++++++++++++++++++++++++++++++++ 
+
+(base) PS E:\Docker> docker run -p 5000:5000 welcome-app
+ * Serving Flask app 'app'
+ * Debug mode: off
+WARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000     # these will run 
+ * Running on http://172.17.0.2:5000    # these will not run (bcoz these ip is present inside our coaintianer )# we cannot acces it 
+
+- we acces it throgh our host coantainer through specific port  bcz while running caontainer it we assingn our port to it 
+ ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ 
+
 ################################################################################# 
 
-now next whatever images we have created we push it to docker repository 
 
+* if we right docker ps we can see how many coantianer are Running 
+
+(base) E:\Docker>docker ps
+CONTAINER ID   IMAGE         COMMAND           CREATED         STATUS         PORTS                    NAMES
+a5c7a5e8987f   welcome-app   "python app.py"   5 minutes ago   Up 5 minutes   0.0.0.0:5000->5000/tcp   confident_hellman  
+
+- 0.0.0.0:5000->5000/tcp   # her we are accessing host to cantainer port 
+
+
+now next whatever images we have created we push it to docker repository     
+
+---------------------------------------------------------------------------------------- 
+
+- if you want to stop docker caonatiner 
+docker ps 
+
+(base) E:\Docker>docker stop a5c7a5e8987f
+a5c7a5e8987f
+
+
+---------------------------------------------------------------------------------------- 
+
+- now push your particular image in to the docker hub repository 
 1) docker login :
 
-docker login 
+docker login   password:(95959466839840750442)
 Authenticating with existing credentials...
 Login Succeeded  
 
@@ -111,44 +151,65 @@ docker build -t jayraj2498/first_app .
 # another way to build and to change of the image name . 
 
 REPOSITORY             TAG       IMAGE ID       CREATED          SIZE
-second_app             latest    0d187dc0b516   15 seconds ago   61MB
 jayraj2498/first_app   latest    b8840543dc52   5 minutes ago    61MB
 
-command:-->  (base) E:\Docker>docker tag second_app final_app   
+command:-->   E:\Docker>docker tag jayraj2498/welcome-app jayraj2498/welcome-app1
 
-op: 
-REPOSITORY             TAG       IMAGE ID       CREATED              SIZE
-final_app              latest    0d187dc0b516   About a minute ago   61MB
-second_app             latest    0d187dc0b516   About a minute ago   61MB
-jayraj2498/first_app   latest    b8840543dc52   7 minutes ago        61M
+(base) E:\Docker>docker images 
+REPOSITORY                TAG       IMAGE ID       CREATED             SIZE
+jayraj2498/welcome-app1   latest    269b811a91af   About an hour ago   1.17GB
+jayraj2498/welcome-app    latest    269b811a91af   About an hour ago   1.17GB
+jayraj2498/first_app      latest    b8840543dc52   2 months ago        61MB
+
+- remove the docker images  
+
+(base) E:\Docker>docker image rm -f jayraj2498/welcome-app:latest    <--- 
+Untagged: jayraj2498/welcome-app:latest
+Untagged: jayraj2498/welcome-app@sha256:f5f7443e438644e6ac7e712c05b06304be1d8d724d22d7a0087b6fcae1d023e4  
+
+
+(base) E:\Docker>docker images 
+REPOSITORY                TAG       IMAGE ID       CREATED             SIZE
+jayraj2498/welcome-app1   latest    269b811a91af   About an hour ago   1.17GB
+jayraj2498/first_app      latest    b8840543dc52   2 months ago        61MB
 
 
 
 4) push the image 
 
 command : 
-E:\Docker>docker push jayraj2498/first_app:latest    < -- you can downloa it and run as container   
+(base) PS E:\Docker> docker push jayraj2498/welcome-app:latest    < -- you can downloa it and run as container     
+
+->## here most imp thing is u can also download or pull  it and run it as a coantainer 
 
 
-# pull 
+5) # pull 
+
+(base) E:\Docker>docker pull jayraj2498/welcome-app:latest                       <--- 
+latest: Pulling from jayraj2498/welcome-app
+Digest: sha256:f5f7443e438644e6ac7e712c05b06304be1d8d724d22d7a0087b6fcae1d023e4
+Status: Downloaded newer image for jayraj2498/welcome-app:latest
+docker.io/jayraj2498/welcome-app:latest
+
 
 (base) E:\Docker>docker images 
-REPOSITORY             TAG       IMAGE ID       CREATED          SIZE
-jayraj2498/first_app   latest    b8840543dc52   44 minutes ago   61MB    
-
-# pull : 
-
-E:\Docker>docker pull jayraj2498/last_app:latest 
-
-op: latest: Pulling from jayraj2498/first_app 
+REPOSITORY                TAG       IMAGE ID       CREATED             SIZE
+jayraj2498/welcome-app1   latest    269b811a91af   About an hour ago   1.17GB
+jayraj2498/welcome-app    latest    269b811a91af   About an hour ago   1.17GB
+jayraj2498/first_app      latest    b8840543dc52   2 months ago        61MB
 
 
+
+
+* now to run these 
 
 # run : 
 
+now thes time we run it in detach mode 
 
-(base) E:\Docker>docker run -d -p 5000:5000 jayraj2498/first_app 
-56950231c347cfaba874bbe874d7bdb181ed16e40cd92857f9e9af7fc3508022  
+(base) E:\Docker>docker run -d -p 5000:5000  jayraj2498/welcome-app:latest 
+6308109b25bc48abb8b7d71489ecd84303306a890a224f5518adaf524b561d90            <-- op 
+
 
 
 
@@ -156,4 +217,45 @@ op: latest: Pulling from jayraj2498/first_app
 REPOSITORY               TAG       IMAGE ID       CREATED         SIZE
 jayraj2498/first_app     latest    b8840543dc52   3 hours ago     61MB
 hello-world              latest    d2c94e258dcb   8 months ago    13.3kB
-docker/getting-started   latest    3e4394f6b72f   12 months ago   47MB
+docker/getting-started   latest    3e4394f6b72f   12 months ago   47MB 
+
+
+
+----------------------------------------------------------------------------------------- 
+
+now at the end we have to stop the running docker image 
+
+- to do it 
+first do : = docker ps (it wil tell you which docker images is runing )  
+
+(base) E:\Docker>docker ps     <-- 
+
+CONTAINER ID   IMAGE                           COMMAND           CREATED         STATUS         PORTS                    NAMES
+6308109b25bc   jayraj2498/welcome-app:latest   "python app.py"   5 minutes ago   Up 5 minutes   0.0.0.0:5000->5000/tcp   wizardly_pare 
+
+
+
+
+
+
+
+
+
+
+################################################################################################ 
+
+
+* to start over from again to n the app  will 
+
+What's Next?
+  View a summary of image vulnerabilities and recommendations → docker scout quickview
+(base) PS E:\Docker> docker images
+REPOSITORY             TAG       IMAGE ID       CREATED          SIZE
+welcome-app            latest    269b811a91af   33 seconds ago   1.17GB
+jayraj2498/first_app   latest    b8840543dc52   2 months ago      61MB
+(base) PS E:\Docker>  
+
+
+
+
+ 
